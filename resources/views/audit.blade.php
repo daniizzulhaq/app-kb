@@ -1,0 +1,6 @@
+@extends('layout')
+@section('title','Audit log')
+@section('content')
+<div class="page-heading"><div><div class="eyebrow">Keamanan data</div><h1>Audit log</h1><p>Jejak akses identitas, perubahan data, login, dan ekspor laporan.</p></div><span class="pill"><x-icon name="shield" size="14"/>Khusus admin</span></div>
+<section class="panel table-panel"><div class="panel-head"><div><h2>Riwayat aktivitas</h2><p>Catatan hanya baca. Nilai data pribadi tidak dimasukkan ke log.</p></div></div>@if($logs->isEmpty())<x-empty title="Belum ada aktivitas tercatat"/>@else<div class="table-wrap"><table><thead><tr><th>Waktu</th><th>Pengguna</th><th>Aktivitas</th><th>Data / ID</th><th>Alamat IP</th></tr></thead><tbody>@foreach($logs as $log)<tr><td class="mono small">{{ $log->created_at->format('d/m/Y H:i:s') }}</td><td><span class="table-title">{{ $log->user?->name??'Pengguna dihapus' }}</span><span class="table-sub">{{ $log->user?->role }}</span></td><td>{{ $log->action }}</td><td>{{ $log->subject }} {{ $log->subject_id?'#'.$log->subject_id:'' }}</td><td class="mono text-muted">{{ $log->ip_address }}</td></tr>@endforeach</tbody></table></div><div class="pagination-wrap">{{ $logs->links() }}</div>@endif</section>
+@endsection

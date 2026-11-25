@@ -1,0 +1,23 @@
+<?php
+return [
+    'required'=>':attribute wajib diisi.',
+    'string'=>':attribute harus berupa teks.',
+    'email'=>'Format :attribute tidak valid.',
+    'integer'=>':attribute harus berupa bilangan bulat.',
+    'boolean'=>':attribute tidak valid.',
+    'digits'=>':attribute harus terdiri dari :digits digit.',
+    'date'=>':attribute harus berupa tanggal yang valid.',
+    'before_or_equal'=>':attribute harus pada atau sebelum :date.',
+    'after'=>':attribute harus setelah :date.',
+    'regex'=>'Format :attribute tidak valid.',
+    'unique'=>':attribute sudah digunakan.',
+    'exists'=>':attribute tidak ditemukan atau sudah tidak tersedia.',
+    'in'=>'Pilihan :attribute tidak valid.',
+    'confirmed'=>'Konfirmasi :attribute tidak sesuai.',
+    'array'=>':attribute harus berupa kumpulan data.',
+    'max'=>['string'=>':attribute maksimal :max karakter.','numeric'=>':attribute maksimal :max.','array'=>':attribute maksimal :max isian.'],
+    'min'=>['string'=>':attribute minimal :min karakter.','numeric'=>':attribute minimal :min.','array'=>':attribute minimal :min isian.'],
+    'size'=>['array'=>':attribute harus memiliki :size isian.'],
+    'between'=>['numeric'=>':attribute harus antara :min dan :max.'],
+    'attributes'=>['nik'=>'NIK','name'=>'Nama','birth_date'=>'Tanggal lahir','spouse_name'=>'Nama pasangan','address'=>'Alamat','region_id'=>'Wilayah','facility_id'=>'Ruangan pelayanan','phone'=>'Nomor HP','children_count'=>'Jumlah anak','service_date'=>'Tanggal pelayanan','method'=>'Metode KB','action'=>'Jenis tindakan','participant_id'=>'Peserta','officer_id'=>'Petugas','notes'=>'Catatan','next_visit_date'=>'Tanggal kontrol','year'=>'Tahun','month'=>'Bulan','username'=>'Username','login'=>'Username atau email resmi','email'=>'Email resmi','password'=>'Kata sandi','role'=>'Peran','is_active'=>'Status akun','amount'=>'Target','targets'=>'Target capaian','targets.*'=>'Target periode','appointment_status'=>'Status jadwal','appointment_note'=>'Catatan tindak lanjut','q'=>'Kata kunci','date'=>'Tanggal','code'=>'Kode wilayah','type'=>'Jenis ruangan'],
+];

@@ -1,0 +1,6 @@
+{
+  "name": "sikb-internal", "private": true, "type": "module",
+  "scripts": {"dev": "vite --configLoader runner", "build": "vite build --configLoader runner"},
+  "devDependencies": {"@tailwindcss/vite": "^4.0.0", "tailwindcss": "^4.0.0", "vite": "^6.0.0", "laravel-vite-plugin": "^1.2.0"},
+  "dependencies": {"chart.js": "^4.4.0"}
+}
