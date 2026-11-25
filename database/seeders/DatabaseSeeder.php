@@ -7,24 +7,12 @@ use App\Models\{User,Region,Facility,Participant,Service,Target};
 use App\Services\ServiceLifecycle;
 
 class DatabaseSeeder extends Seeder {
-    public const ROOMS = [
-        'Ruangan perawatan Asoka' => 'Perawatan',
-        'Ruang PONEK' => 'PONEK',
-        'Ruang poli kandungan' => 'Poliklinik',
-        'Instalasi bedah' => 'Bedah',
-    ];
-
     public function run(): void {
         DB::transaction(function () {
             $this->call(AccountSeeder::class);
+            $this->call(MasterDataSeeder::class);
             if (app()->environment('production')) return;
-            $region = Region::firstOrCreate(['code'=>'32.04.01'], ['name'=>'Sukamaju']);
-
-            foreach (self::ROOMS as $name => $type) {
-                Facility::firstOrCreate(['name'=>$name], [
-                    'region_id'=>$region->id, 'type'=>$type,
-                ]);
-            }
+            $region = Region::where('name','Luwuk')->firstOrFail();
 
             foreach ([0, now()->month] as $month) {
                 Target::firstOrCreate(['year'=>now()->year, 'month'=>$month], ['amount'=>1]);
@@ -52,7 +40,7 @@ class DatabaseSeeder extends Seeder {
                 'service_date'=>today()->toDateString(),
                 'method'=>'Suntik',
                 'action'=>'Pemasangan',
-                'facility_id'=>Facility::where('name','Ruangan perawatan Asoka')->firstOrFail()->id,
+                'facility_id'=>Facility::where('name','Ruang ASOKA')->firstOrFail()->id,
                 'officer_id'=>$officer->id,
                 'notes'=>'Data contoh sintetis untuk demonstrasi aplikasi.',
                 'next_visit_date'=>today()->addDays(28)->toDateString(),

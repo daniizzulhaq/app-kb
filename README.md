@@ -33,7 +33,11 @@ Buka http://127.0.0.1:8078. Port ini dipilih agar tidak bentrok dengan aplikasi 
 
 Kata sandi tidak ditulis di source code atau panduan ini. Seeder mengambil kata sandi pertama dari konfigurasi `.env` dan tidak mengganti kata sandi akun yang sudah ada. Login menggunakan username atau email resmi jika telah diisi. Email bersifat opsional; nama pengguna dan email staf yang sebenarnya dapat diatur lewat Manajemen pengguna. Akun baru disimpan dengan password hash Laravel.
 
-Admin dapat mengubah kata sandi akun melalui Manajemen pengguna. Seeder berisi **satu peserta sintetis, satu pelayanan, satu jadwal kontrol, satu wilayah, serta satu target bulanan dan satu target tahunan**. NIK contoh `9999000000000001` dan nomor HP contoh `080000000001` bersifat sintetis. Empat ruangan yang disediakan: **Ruangan perawatan Asoka, Ruang PONEK, Ruang poli kandungan, dan Instalasi bedah**. Tetap tersedia satu akun untuk masing-masing dari tiga role. Seeder aman dijalankan ulang: akun dan target yang sudah ada tidak direset, peserta contoh tidak ditambahkan ulang jika database telah memiliki peserta. Untuk database operasional kosong, jalankan `php artisan migrate` tanpa `--seed`, lalu `php artisan db:seed --class=AccountSeeder` untuk membuat akun default saja. Wilayah, ruangan, dan target kemudian diisi oleh admin.
+Admin dapat mengubah kata sandi akun melalui Manajemen pengguna. `MasterDataSeeder` menyediakan **24 kecamatan Kabupaten Banggai** dan **7 ruangan pelayanan**: Ruang PONEK, Ruang ASOKA, Ruang Poli kandungan, Instalasi Bedah Sentral, Ruang VIP Tulip, Ruang VIP Sakura, dan Ruang VIP Bougenville. Ruangan dikelompokkan di wilayah Luwuk; ruang VIP memakai jenis Perawatan. Kode kecamatan berawalan `BANGGAI-` adalah pengenal internal aplikasi, bukan kode wilayah administratif resmi.
+
+Untuk menambahkan master ini ke database yang sudah berjalan, jalankan `php artisan db:seed --class=MasterDataSeeder`. Seeder aman dijalankan ulang: kecamatan tidak digandakan, nama ruangan contoh lama disesuaikan dengan mempertahankan ID dan riwayat pelayanan, serta wilayah lama yang digunakan peserta tetap dipertahankan. Seeder ini tidak menambahkan akun, peserta, pelayanan, atau target.
+
+Di luar lingkungan production, `DatabaseSeeder` juga menyediakan satu peserta sintetis, satu pelayanan, satu jadwal kontrol, satu target bulanan dan satu target tahunan. NIK contoh `9999000000000001` dan nomor HP contoh `080000000001` bersifat sintetis. Tetap tersedia satu akun untuk masing-masing dari tiga role. Akun dan target yang sudah ada tidak direset, peserta contoh tidak ditambahkan ulang jika database telah memiliki peserta.
 
 ## Persiapan hosting
 
@@ -57,12 +61,13 @@ composer install --no-dev --optimize-autoloader
 php artisan key:generate
 php artisan migrate --force
 php artisan db:seed --class=AccountSeeder --force
+php artisan db:seed --class=MasterDataSeeder --force
 php artisan optimize
 ```
 
 Jika memindahkan database yang sudah berisi data terenkripsi, gunakan `APP_KEY` dari instalasi asal dan **jangan menjalankan `key:generate`**. Biarkan direktori `storage/` dan `bootstrap/cache/` dapat ditulis oleh proses PHP. Jalankan `npm ci` dan `npm run build` di komputer pengembangan jika hosting tidak menyediakan Node.js.
 
-Pembuatan akun lewat `AccountSeeder` tidak menambahkan peserta, pelayanan, target, atau wilayah contoh. `DatabaseSeeder` juga melewati data contoh ketika `APP_ENV=production`. Isi wilayah dan ruangan operasional melalui akun Admin. Pengaturan proxy lokal mendukung ngrok; jika hosting menggunakan reverse proxy lain, sesuaikan alamat proxy tepercaya dengan konfigurasi server tersebut.
+Pembuatan akun lewat `AccountSeeder` tidak menambahkan peserta, pelayanan, target, atau wilayah contoh. `MasterDataSeeder` hanya menambahkan master kecamatan dan ruangan. `DatabaseSeeder` menjalankan kedua seeder tersebut dan melewati data contoh ketika `APP_ENV=production`. Master tetap dapat dikelola melalui akun Admin. Pengaturan proxy lokal mendukung ngrok; jika hosting menggunakan reverse proxy lain, sesuaikan alamat proxy tepercaya dengan konfigurasi server tersebut.
 
 ## Hak akses
 
