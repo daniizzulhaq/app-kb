@@ -1,9 +1,49 @@
 import Chart from 'chart.js/auto';
 const sidebar=document.querySelector('#sidebar');
-function setSidebar(open){sidebar?.classList.toggle('open',open);document.querySelector('#sidebar-backdrop')?.classList.toggle('open',open);document.querySelector('#sidebar-toggle')?.setAttribute('aria-expanded',String(open));}
+const navigationMedia=window.matchMedia('(max-width: 1023px)');
+function setSidebar(open){
+ if(!sidebar)return;
+ const wasOpen=sidebar.classList.contains('open');open=Boolean(open&&navigationMedia.matches);
+ sidebar.classList.toggle('open',open);sidebar.inert=navigationMedia.matches&&!open;
+ sidebar.setAttribute('aria-hidden',String(navigationMedia.matches&&!open));
+ if(open){sidebar.setAttribute('role','dialog');sidebar.setAttribute('aria-modal','true');}else{sidebar.removeAttribute('role');sidebar.removeAttribute('aria-modal');}
+ document.querySelector('#sidebar-backdrop')?.classList.toggle('open',open);
+ document.querySelector('#sidebar-toggle')?.setAttribute('aria-expanded',String(open));
+ document.documentElement.classList.toggle('navigation-open',open);document.body.classList.toggle('navigation-open',open);
+ const shell=document.querySelector('.app-shell');if(shell)shell.inert=open;
+ if(open)document.querySelector('#sidebar-close')?.focus({preventScroll:true});
+ else if(wasOpen&&navigationMedia.matches)document.querySelector('#sidebar-toggle')?.focus({preventScroll:true});
+}
 document.querySelector('#sidebar-toggle')?.addEventListener('click',()=>setSidebar(!sidebar.classList.contains('open')));
 document.querySelector('#sidebar-backdrop')?.addEventListener('click',()=>setSidebar(false));
-document.addEventListener('keydown',e=>{if(e.key==='Escape')setSidebar(false);});
+document.querySelector('#sidebar-close')?.addEventListener('click',()=>setSidebar(false));
+sidebar?.querySelectorAll('nav a').forEach(link=>link.addEventListener('click',()=>setSidebar(false)));
+navigationMedia.addEventListener('change',()=>setSidebar(false));setSidebar(false);
+document.addEventListener('keydown',e=>{
+ if(e.key==='Escape')setSidebar(false);
+ if(e.key!=='Tab'||!sidebar?.classList.contains('open'))return;
+ const items=[...sidebar.querySelectorAll('a[href],button:not([disabled])')].filter(item=>item.getClientRects().length);
+ if(e.shiftKey&&document.activeElement===items[0]){e.preventDefault();items.at(-1)?.focus();}
+ else if(!e.shiftKey&&document.activeElement===items.at(-1)){e.preventDefault();items[0]?.focus();}
+});
+
+// Preserve the same data and controls while presenting each row as a mobile card.
+document.querySelectorAll('.table-wrap').forEach(wrapper=>{
+ const table=wrapper.querySelector('table');if(!table)return;
+ if(wrapper.hasAttribute('data-wide-table')){
+  table.classList.add('wide-table');wrapper.tabIndex=0;wrapper.setAttribute('role','region');wrapper.setAttribute('aria-label','Rekapitulasi pelayanan, geser untuk melihat seluruh kolom');
+  const hint=document.createElement('p');hint.className='table-scroll-hint';hint.textContent='Geser tabel ke samping untuk melihat seluruh kolom.';wrapper.before(hint);return;
+ }
+ const headers=[...table.querySelectorAll('thead th')].map(th=>th.textContent.trim());
+ if(!headers.length)return;table.classList.add('mobile-cards');table.setAttribute('role','table');
+ table.querySelectorAll('thead,tbody').forEach(group=>group.setAttribute('role','rowgroup'));
+ table.querySelectorAll('tr').forEach(row=>row.setAttribute('role','row'));
+ table.querySelectorAll('th').forEach(cell=>cell.setAttribute('role','columnheader'));
+ table.querySelectorAll('tbody tr').forEach(row=>[...row.children].forEach((cell,index)=>{
+  cell.setAttribute('role','cell');cell.dataset.label=headers[index]??'';if(cell.querySelector('form,.table-actions'))cell.classList.add('mobile-action-cell');
+  const value=document.createElement('div');value.className='mobile-cell-value';while(cell.firstChild)value.append(cell.firstChild);cell.append(value);
+ }));
+});
 document.querySelector('#toggle-password')?.addEventListener('click',e=>{const input=document.querySelector('#password'); input.type=input.type==='password'?'text':'password';e.currentTarget.setAttribute('aria-label',input.type==='password'?'Tampilkan kata sandi':'Sembunyikan kata sandi');});
 document.querySelectorAll('form[data-confirm]').forEach(form=>form.addEventListener('submit',e=>{if(!confirm(form.dataset.confirm))e.preventDefault();}));
 document.querySelectorAll('form').forEach(form=>form.addEventListener('submit',e=>{if(e.defaultPrevented || form.method.toLowerCase()==='get')return; const button=e.submitter; if(button){setTimeout(()=>{button.disabled=true;},0);setTimeout(()=>{button.disabled=false;},10000);}}));
@@ -17,7 +57,7 @@ lookup.closest('form').addEventListener('submit',e=>{if(!hidden.value){e.prevent
 
 const dashboard=document.querySelector('#dashboard-data');
 if(dashboard){const {charts:c,summary:s}=JSON.parse(dashboard.textContent);const theme=getComputedStyle(document.documentElement);const colors=Array.from({length:7},(_,i)=>theme.getPropertyValue(`--method-${i}`).trim());const green=colors[0],blue=colors[2];
-Chart.defaults.font.family="'Segoe UI', sans-serif";Chart.defaults.font.size=11;Chart.defaults.color='#87968b';Chart.defaults.plugins.legend.display=false;Chart.defaults.plugins.tooltip.backgroundColor='#173e2b';Chart.defaults.plugins.tooltip.padding=11;Chart.defaults.plugins.tooltip.cornerRadius=7;
+Chart.defaults.font.family="'Segoe UI', sans-serif";Chart.defaults.font.size=11;Chart.defaults.color='#87968b';Chart.defaults.plugins.legend.display=false;Chart.defaults.plugins.tooltip.backgroundColor='#274d5b';Chart.defaults.plugins.tooltip.padding=11;Chart.defaults.plugins.tooltip.cornerRadius=7;
 const scales={x:{grid:{display:false},border:{display:false},ticks:{maxRotation:0}},y:{beginAtZero:true,border:{display:false,dash:[4,4]},grid:{color:'#edf1f2',drawTicks:false},ticks:{padding:10,precision:0,maxTicksLimit:6}}};
 const options={responsive:true,maintainAspectRatio:false,interaction:{mode:'index',intersect:false},scales};
 new Chart(document.querySelector('#monthly-chart'),{type:'bar',data:{labels:c.labels,datasets:[{label:'Realisasi peserta unik',data:c.monthly,backgroundColor:green,borderRadius:4,maxBarThickness:22},{label:'Target peserta unik',data:c.targets,backgroundColor:'#e1e9e5',borderRadius:4,maxBarThickness:22}]},options});

@@ -34,7 +34,7 @@ class ReportController extends Controller {
             $sheet->setCellValue('A'.($line+5),'Target peserta unik'); $sheet->setCellValue('B'.($line+5),$data['summary']['target']??'Belum diatur');
             $sheet->setCellValue('A'.($line+6),'Persentase capaian'); $sheet->setCellValue('B'.($line+6),$data['summary']['percentage']!==null?$data['summary']['percentage'].'%':'—');
         }
-        $sheet->getStyle('A4:K4')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('08753F');
+        $sheet->getStyle('A4:K4')->getFill()->setFillType(Fill::FILL_SOLID)->getStartColor()->setRGB('087F83');
         foreach(range('A','K') as $col) $sheet->getColumnDimension($col)->setAutoSize(true); $sheet->freezePane('B5');
         return response()->streamDownload(function()use($book){(new Xlsx($book))->save('php://output');},$filename.'.xlsx',['Content-Type'=>'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet']);
     }

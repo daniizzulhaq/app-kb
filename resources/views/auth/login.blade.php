@@ -2,8 +2,8 @@
 <html lang="id">
 <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#08753f">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <meta name="theme-color" content="#087f83">
     <title>Masuk · {{ config('app.name') }}</title>
     <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png" sizes="96x96">
     @vite(['resources/css/app.css','resources/js/app.js'])
