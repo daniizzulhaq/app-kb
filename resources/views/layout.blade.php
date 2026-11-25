@@ -1,4 +1,4 @@
-<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="csrf-token" content="{{ csrf_token() }}"><meta name="theme-color" content="#087f83"><title>@yield('title','Dashboard') · {{ config('app.name') }}</title><link rel="icon" href="{{ asset('favicon.png') }}" type="image/png" sizes="96x96">@vite(['resources/css/app.css','resources/js/app.js'])</head>
+<!doctype html><html lang="id"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><meta name="csrf-token" content="{{ csrf_token() }}"><meta name="theme-color" content="#087f83"><title>@yield('title','Dashboard') · {{ config('app.name') }}</title><link rel="icon" href="{{ asset('favicon.png') }}" type="image/png" sizes="96x96"><x-pwa-head/>@vite(['resources/css/app.css','resources/js/app.js'])</head>
 <body>
 <div class="sidebar-backdrop" id="sidebar-backdrop"></div>
 <aside class="sidebar" id="sidebar" aria-label="Navigasi utama">
@@ -28,6 +28,7 @@
 <main id="main-content" class="main-content">
 @if(session('success'))<div class="alert alert-success" role="status"><x-icon name="check"/>{{ session('success') }}</div>@endif
 @if($errors->any())<div class="alert alert-error" role="alert"><x-icon name="info"/><div><strong>Periksa kembali isian Anda.</strong><ul>@foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach</ul></div></div>@endif
+<x-pwa-install/>
 @yield('content')
 <footer class="page-footer"><span>© {{ now()->year }} {{ config('app.name') }}. Sistem Informasi Keluarga Berencana.</span><span><x-icon name="lock" size="13"/> Akses internal terbatas</span></footer>
 </main></div>

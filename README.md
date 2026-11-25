@@ -83,6 +83,14 @@ Pembuatan akun lewat `AccountSeeder` tidak menambahkan peserta, pelayanan, targe
 - Jadwal berasal dari tanggal kontrol pada pelayanan. Penyelesaian jadwal tidak otomatis membuat pelayanan baru; petugas harus mencatat tindakan yang benar-benar dilakukan. Jadwal lama tetap terjadwal sampai petugas menyelesaikan/membatalkannya.
 - Laporan dapat difilter bulan, tahun, wilayah peserta, ruangan pelayanan, dan metode. Jika dimensi wilayah/ruangan/metode difilter, kartu target global tidak ditampilkan agar perbandingan tetap bermakna.
 
+## PWA dan pemasangan di HP
+
+SI KB RS mendukung pemasangan ke layar utama dan membuka aplikasi dalam mode `standalone`. Gunakan domain hosting dengan HTTPS; ngrok HTTPS dan localhost dapat dipakai untuk pemeriksaan lokal. Pada browser Android yang mendukung, tombol **Pasang** muncul ketika browser mengizinkan pemasangan; pengguna juga dapat memakai menu browser **Instal aplikasi/Tambahkan ke layar utama**. Pada iPhone/iPad, buka di Safari lalu pilih **Bagikan → Tambahkan ke Layar Utama**. Ikon aplikasi menggunakan lambang Kabupaten Banggai.
+
+Upload juga `public/manifest.webmanifest`, `public/sw.js`, `public/offline.html`, `public/icons/`, serta hasil build terbaru. Service worker hanya menyimpan aset publik seperti ikon, logo, CSS/JS, dan halaman koneksi terputus. Halaman peserta, pencarian, dashboard, laporan, sesi login, dan data formulir tidak dimasukkan ke cache PWA. Aplikasi tetap memerlukan internet untuk pencatatan dan tidak menyediakan antrean pengiriman offline. Setelah koneksi pulih, tombol **Coba lagi** memuat halaman dari server.
+
+Jika mengganti aset offline atau ikon di kemudian hari, naikkan versi `CACHE_NAME` pada `public/sw.js` agar cache publik lama dibersihkan. Akun, hak akses, dan autentikasi tetap ditangani Laravel saat aplikasi dibuka dari ikon HP.
+
 ## Perlindungan data
 
 Autentikasi session, regenerasi sesi, CSRF, throttling login, middleware role pada server, validasi, penguncian peserta saat perubahan riwayat, foreign key, dan audit log. NIK, nama pasangan, alamat, nomor HP, catatan pelayanan dan tindak lanjut terenkripsi pada database. NIK disamarkan dalam daftar/pencarian. Log berisi tindakan dan ID objek, bukan salinan data pribadi. Identitas lengkap hanya tersedia pada halaman detail/edit yang aksesnya dicatat. Nama, tanggal lahir dan wilayah tetap digunakan untuk operasional; batasi akses database dan cadangan.

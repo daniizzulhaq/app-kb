@@ -6,6 +6,7 @@
     <meta name="theme-color" content="#087f83">
     <title>Masuk · {{ config('app.name') }}</title>
     <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png" sizes="96x96">
+    <x-pwa-head/>
     @vite(['resources/css/app.css','resources/js/app.js'])
 </head>
 <body>
@@ -46,6 +47,7 @@
                 <button type="submit" class="btn btn-primary"><x-icon name="lock" size="17"/>Masuk ke {{ config('app.name') }}</button>
             </form>
             <div class="login-note"><x-icon name="shield" size="18"/><span>Gunakan akun yang diberikan oleh administrator. Data peserta bersifat rahasia dan hanya dapat diakses sesuai peran.</span></div>
+            <x-pwa-install/>
             <div class="login-copyright">© {{ now()->year }} {{ config('app.institution') }} <span>·</span> {{ config('app.name') }}</div>
         </div>
     </main>

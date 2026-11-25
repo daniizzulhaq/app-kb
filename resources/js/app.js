@@ -1,4 +1,5 @@
 import Chart from 'chart.js/auto';
+import './pwa';
 const sidebar=document.querySelector('#sidebar');
 const navigationMedia=window.matchMedia('(max-width: 1023px)');
 function setSidebar(open){
